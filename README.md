@@ -98,3 +98,40 @@ SELECT Info_Llibre.Títol
 FROM llibres
 WHERE 'Ficció' IN (SELECT explode(Temes))
 AND 'Centre' IN (SELECT key FROM map_keys(Exemplars_Biblioteca));
+
+Apartat 3
+hdfs dfs -put centres_educatius.json /user/hive/warehouse/centres_educatius/
+
+CREATE EXTERNAL TABLE centres_educatius (
+  codiCentre STRING,
+  nomCentre STRING,
+  tipusCentreNomCa STRING,
+  nomMunicipi STRING,
+  illa STRING,
+  esPublic BOOLEAN,
+  nomEtapa ARRAY<STRING>  -- Tipus complex ARRAY per les etapes educatives
+)
+STORED AS JSON
+LOCATION '/user/hive/warehouse/centres_educatius';
+
+a
+SELECT COUNT(*) AS nombre_centres_publics_eivissa
+FROM centres_educatius
+WHERE esPublic = true AND illa = 'Eivissa';
+
+b
+SELECT nomCentre
+FROM centres_educatius
+WHERE nomMunicipi = 'Palma' AND nomEtapa CONTAINS 'Educació secundària';
+
+c
+SELECT tipusCentreNomCa, COUNT(*) AS nombre_centres
+FROM centres_educatius
+WHERE illa = 'Menorca'
+GROUP BY tipusCentreNomCa;
+
+d
+SELECT nomCentre
+FROM centres_educatius
+WHERE illa = 'Mallorca' AND 'Grau superior' IN (SELECT explode(nomEtapa));
+
