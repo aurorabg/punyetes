@@ -183,7 +183,11 @@ SELECT info_llibre.titol
 FROM biblioteca 
 WHERE 'Ficció' IN temes AND exemplars_biblioteca['Centre'] > 0;
 
+
 Apartat 3
+
+https://raw.githubusercontent.com/tnavarrete-iedib/bigdata-24-25/refs/heads/main/centres_educatius.json 
+
 hdfs dfs -put centres_educatius.json /user/hive/warehouse/centres_educatius/
 
 CREATE EXTERNAL TABLE centres_educatius (
@@ -193,9 +197,8 @@ CREATE EXTERNAL TABLE centres_educatius (
   nomMunicipi STRING,
   illa STRING,
   esPublic BOOLEAN,
-  nomEtapa ARRAY<STRING>  -- Tipus complex ARRAY per les etapes educatives
+  nomEtapa ARRAY<STRING>
 )
-STORED AS JSON
 LOCATION '/user/hive/warehouse/centres_educatius';
 
 a
