@@ -85,67 +85,74 @@ LIMIT 10;
 apartat 2
 
 1
-CREATE TABLE llibres (
-  ID INT,
-  Info_Llibre STRUCT<Títol: STRING, Autor: STRING, Any: INT>,
-  Temes ARRAY<STRING>,
-  Exemplars_Biblioteca MAP<STRING, INT>
+CREATE TABLE biblioteca (
+    id INT,
+    info_llibre STRUCT<titol: STRING, autor: STRING, any: INT>,
+    temes ARRAY<STRING>,
+    exemplars_biblioteca MAP<STRING, INT>
 )
 STORED AS PARQUET;
 
 2
-INSERT INTO llibres VALUES
-(1, NAMED_STRUCT('Títol', '1984', 'Autor', 'George Orwell', 'Any', 1949), ARRAY('Ficció', 'Distopia', 'Societat'), MAP('Centre', 5, 'Llevant', 2)),
-(2, NAMED_STRUCT('Títol', 'Sapiens', 'Autor', 'Yuval Noah Harari', 'Any', 2011), ARRAY('Assaig', 'Història', 'Antropologia', 'Societat'), MAP('Llevant', 4, 'Ponent', 3)),
-(3, NAMED_STRUCT('Títol', 'Dune', 'Autor', 'Frank Herbert', 'Any', 1965), ARRAY('Ficció', 'Aventura', 'Ciència-ficció'), MAP('Centre', 7, 'Ponent', 2)),
-(4, NAMED_STRUCT('Títol', 'El Senyor dels anells', 'Autor', 'J.R.R. Tolkien', 'Any', 1954), ARRAY('Ficció', 'Aventura', 'Fantasia'), MAP('Centre', 8, 'Llevant', 3)),
-(5, NAMED_STRUCT('Títol', 'Història de dues ciutats', 'Autor', 'Charles Dickens', 'Any', 1859), ARRAY('Ficció', 'Història', 'Drama'), MAP('Llevant', 2));
+INSERT INTO biblioteca VALUES
+(1, NAMED_STRUCT('titol', '1984', 'autor', 'George Orwell', 'any', 1949), 
+    ARRAY('Ficció', 'Distopia', 'Societat'), 
+    MAP('Centre', 5, 'Llevant', 2)),
+(2, NAMED_STRUCT('titol', 'Sapiens', 'autor', 'Yuval Noah Harari', 'any', 2011), 
+    ARRAY('Assaig', 'Història', 'Antropologia', 'Societat'), 
+    MAP('Llevant', 4, 'Ponent', 3)),
+(3, NAMED_STRUCT('titol', 'Dune', 'autor', 'Frank Herbert', 'any', 1965), 
+    ARRAY('Ficció', 'Aventura', 'Ciència-ficció'), 
+    MAP('Centre', 7, 'Ponent', 2)),
+(4, NAMED_STRUCT('titol', 'El Senyor dels anells', 'autor', 'J.R.R. Tolkien', 'any', 1954), 
+    ARRAY('Ficció', 'Aventura', 'Fantasia'), 
+    MAP('Centre', 8, 'Llevant', 3)),
+(5, NAMED_STRUCT('titol', 'Història de dues ciutats', 'autor', 'Charles Dickens', 'any', 1859), 
+    ARRAY('Ficció', 'Història', 'Drama'), 
+    MAP('Llevant', 2));
 
 3
 a
 HiveQL:
-SELECT Info_Llibre.Títol
-FROM llibres
-WHERE Info_Llibre.Any BETWEEN 1900 AND 1999;
+SELECT info_llibre.titol 
+FROM biblioteca 
+WHERE info_llibre.any >= 1901 AND info_llibre.any <= 2000;
 
 Impala SQL:
-SELECT Info_Llibre.Títol
-FROM llibres
-WHERE Info_Llibre.Any BETWEEN 1900 AND 1999;
+SELECT info_llibre.titol 
+FROM biblioteca 
+WHERE info_llibre.any BETWEEN 1901 AND 2000;
 
 b
 HiveQL:
-SELECT Info_Llibre.Títol
-FROM llibres
-WHERE 'Història' IN (SELECT explode(Temes));
+SELECT info_llibre.titol 
+FROM biblioteca 
+WHERE ARRAY_CONTAINS(temes, 'Història');
 
 Impala SQL:
-SELECT Info_Llibre.Títol
-FROM llibres
-WHERE 'Història' IN (SELECT explode(Temes));
-
+SELECT info_llibre.titol 
+FROM biblioteca 
+WHERE 'Història' IN temes;
 
 c
 HiveQL:
-SELECT SUM(Exemplars_Biblioteca['Llevant']) AS Total_Exemplars_Llevant
-FROM llibres;
+SELECT SUM(exemplars_biblioteca['Llevant']) AS total_exemplars_llevant
+FROM biblioteca;
 
 Impala SQL:
-SELECT SUM(Exemplars_Biblioteca['Llevant']) AS Total_Exemplars_Llevant
-FROM llibres;
+SELECT SUM(exemplars_biblioteca['Llevant']) AS total_exemplars_llevant
+FROM biblioteca;
 
 d
 HiveQL:
-SELECT Info_Llibre.Títol
-FROM llibres
-WHERE 'Ficció' IN (SELECT explode(Temes))
-AND 'Centre' IN (SELECT key FROM map_keys(Exemplars_Biblioteca));
+SELECT info_llibre.titol 
+FROM biblioteca 
+WHERE ARRAY_CONTAINS(temes, 'Ficció') AND exemplars_biblioteca['Centre'] > 0;
 
 Impala SQL:
-SELECT Info_Llibre.Títol
-FROM llibres
-WHERE 'Ficció' IN (SELECT explode(Temes))
-AND 'Centre' IN (SELECT key FROM map_keys(Exemplars_Biblioteca));
+SELECT info_llibre.titol 
+FROM biblioteca 
+WHERE 'Ficció' IN temes AND exemplars_biblioteca['Centre'] > 0;
 
 Apartat 3
 hdfs dfs -put centres_educatius.json /user/hive/warehouse/centres_educatius/
