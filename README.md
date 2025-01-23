@@ -35,9 +35,9 @@ ROW FORMAT DELIMITED
 FIELDS TERMINATED BY '\t'
 TBLPROPERTIES ("skip.header.line.count"="1");
 
-hdfs dfs -put /home/cloudera/netflix/raw_titles.csv /user/hive/warehouse/netflix.db/raw_titles/
+hdfs dfs -put /home/cloudera/netflix/raw_titles.csv /user/hive/warehouse/netflix.db/titles/
 
-hdfs dfs -put /home/cloudera/netflix/raw_credits.csv /user/hive/warehouse/netflix.db/raw_credits/
+hdfs dfs -put /home/cloudera/netflix/raw_credits.csv /user/hive/warehouse/netflix.db/credits/
 
 LOAD DATA INPATH '/user/hive/warehouse/netflix.db/raw_titles/raw_titles.csv' INTO TABLE titles;
 
