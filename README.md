@@ -2,6 +2,44 @@
 https://raw.githubusercontent.com/tnavarrete-iedib/bigdata-24-25/refs/heads/main/raw_titles.csv 
 https://raw.githubusercontent.com/tnavarrete-iedib/bigdata-24-25/refs/heads/main/raw_credits.csv 
 
+CREATE DATABASE IF NOT EXISTS netflix;
+
+USE netflix;
+
+CREATE TABLE IF NOT EXISTS raw_titles (
+    id STRING,
+    title STRING,
+    type STRING,
+    release_year INT,
+    age_certification STRING,
+    runtime INT,
+    genres ARRAY<STRING>,
+    production_countries ARRAY<STRING>,
+    seasons INT,
+    imdb_id STRING,
+    imdb_score FLOAT,
+    imdb_votes INT
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+STORED AS TEXTFILE
+TBLPROPERTIES ("skip.header.line.count"="1");
+
+CREATE TABLE IF NOT EXISTS raw_credits (
+    person_id INT,
+    id STRING
+    name STRING,
+    character STRING,
+    role STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+STORED AS TEXTFILE
+TBLPROPERTIES ("skip.header.line.count"="1");
+
+LOAD DATA LOCAL INPATH 'home/cloudera/netflix/raw_titles.csv' INTO TABLE raw_titles;
+LOAD DATA LOCAL INPATH 'home/cloudera/netflix/raw_credits.csv' INTO TABLE raw_credits;
+
 1
 SELECT title, rating, seasons
 FROM raw_titles
