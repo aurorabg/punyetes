@@ -137,6 +137,8 @@ SELECT
     NAMED_STRUCT('titol', 'Història de dues ciutats', 'autor', 'Charles Dickens', 'any', 1859) AS info_llibre,
     ARRAY('Ficció', 'Història', 'Drama') AS temes,
     MAP('Llevant', 2) AS exemplars_biblioteca;
+    
+INVALIDATE METADATA netflix.biblioteca;
 
 3
 a
