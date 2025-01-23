@@ -27,10 +27,10 @@ TBLPROPERTIES ("skip.header.line.count"="1");
 
 CREATE TABLE IF NOT EXISTS raw_credits (
     person_id INT,
-    id STRING
+    id STRING,
     name STRING,
     character STRING,
-    role STRING
+    `role` STRING
 )
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY '\t'
