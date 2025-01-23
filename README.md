@@ -103,31 +103,40 @@ CREATE TABLE biblioteca (
 STORED AS PARQUET;
 
 2
-INSERT INTO biblioteca VALUES 
-(1, NAMED_STRUCT('titol', '1984', 'autor', 'George Orwell', 'any', 1949), 
-    ARRAY('Ficció', 'Distopia', 'Societat'), 
-    MAP('Centre', 5, 'Llevant', 2));
+INSERT INTO biblioteca 
+SELECT 
+    1 AS id,
+    NAMED_STRUCT('titol', '1984', 'autor', 'George Orwell', 'any', 1949) AS info_llibre,
+    ARRAY('Ficció', 'Distopia', 'Societat') AS temes,
+    MAP('Centre', 5, 'Llevant', 2) AS exemplars_biblioteca;
 
-INSERT INTO biblioteca VALUES 
-(2, NAMED_STRUCT('titol', 'Sapiens', 'autor', 'Yuval Noah Harari', 'any', 2011), 
-    ARRAY('Assaig', 'Història', 'Antropologia', 'Societat'), 
-    MAP('Llevant', 4, 'Ponent', 3));
+INSERT INTO biblioteca 
+SELECT 
+    2 AS id,
+    NAMED_STRUCT('titol', 'Sapiens', 'autor', 'Yuval Noah Harari', 'any', 2011) AS info_llibre,
+    ARRAY('Assaig', 'Història', 'Antropologia', 'Societat') AS temes,
+    MAP('Llevant', 4, 'Ponent', 3) AS exemplars_biblioteca;
 
-INSERT INTO biblioteca VALUES 
-(3, NAMED_STRUCT('titol', 'Dune', 'autor', 'Frank Herbert', 'any', 1965), 
-    ARRAY('Ficció', 'Aventura', 'Ciència-ficció'), 
-    MAP('Centre', 7, 'Ponent', 2));
+INSERT INTO biblioteca 
+SELECT 
+    3 AS id,
+    NAMED_STRUCT('titol', 'Dune', 'autor', 'Frank Herbert', 'any', 1965) AS info_llibre,
+    ARRAY('Ficció', 'Aventura', 'Ciència-ficció') AS temes,
+    MAP('Centre', 7, 'Ponent', 2) AS exemplars_biblioteca;
 
-INSERT INTO biblioteca VALUES 
-(4, NAMED_STRUCT('titol', 'El Senyor dels anells', 'autor', 'J.R.R. Tolkien', 'any', 1954), 
-    ARRAY('Ficció', 'Aventura', 'Fantasia'), 
-    MAP('Centre', 8, 'Llevant', 3));
+INSERT INTO biblioteca 
+SELECT 
+    4 AS id,
+    NAMED_STRUCT('titol', 'El Senyor dels anells', 'autor', 'J.R.R. Tolkien', 'any', 1954) AS info_llibre,
+    ARRAY('Ficció', 'Aventura', 'Fantasia') AS temes,
+    MAP('Centre', 8, 'Llevant', 3) AS exemplars_biblioteca;
 
-INSERT INTO biblioteca VALUES 
-(5, NAMED_STRUCT('titol', 'Història de dues ciutats', 'autor', 'Charles Dickens', 'any', 1859), 
-    ARRAY('Ficció', 'Història', 'Drama'), 
-    MAP('Llevant', 2));
-
+INSERT INTO biblioteca 
+SELECT 
+    5 AS id,
+    NAMED_STRUCT('titol', 'Història de dues ciutats', 'autor', 'Charles Dickens', 'any', 1859) AS info_llibre,
+    ARRAY('Ficció', 'Història', 'Drama') AS temes,
+    MAP('Llevant', 2) AS exemplars_biblioteca;
 
 3
 a
