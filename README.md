@@ -161,7 +161,7 @@ WHERE ARRAY_CONTAINS(temes, 'Història');
 Impala SQL:
 SELECT info_llibre.titol 
 FROM biblioteca 
-WHERE 'Història' IN temes;
+WHERE ARRAY_CONTAINS(temes, 'Història');
 
 c
 HiveQL:
