@@ -84,6 +84,15 @@ LIMIT 10;
 
 apartat 2
 
+sudo service hive-server2 status
+
+sudo service hive-server2 start
+
+127.0.0.1 quickstart.cloudera
+
+netstat -tuln | grep 10000
+
+
 1
 CREATE TABLE biblioteca (
     id INT,
