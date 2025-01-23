@@ -36,19 +36,17 @@ FIELDS TERMINATED BY '\t'
 TBLPROPERTIES ("skip.header.line.count"="1");
 
 hdfs dfs -put /home/cloudera/netflix/raw_titles.csv /user/hive/warehouse/netflix.db/titles/
-
 hdfs dfs -put /home/cloudera/netflix/raw_credits.csv /user/hive/warehouse/netflix.db/credits/
 
 LOAD DATA INPATH '/user/hive/warehouse/netflix.db/raw_titles/raw_titles.csv' INTO TABLE titles;
-
 LOAD DATA INPATH '/user/hive/warehouse/netflix.db/raw_credits/raw_credits.csv' INTO TABLE credits;
 
 1
 SELECT title, seasons, imdb_score
 FROM titles
 WHERE type = 'SHOW' 
-  AND seasons > 1
-  AND imdb_score IS NOT NULL  -- Aseguramos que haya una valoración
+AND seasons > 1
+AND imdb_score IS NOT NULL
 ORDER BY imdb_score DESC
 LIMIT 10;
 
@@ -56,6 +54,7 @@ LIMIT 10;
 SELECT release_year, SUM(imdb_votes) AS total_votes
 FROM titles
 WHERE type = 'SHOW'
+AND imdb_votes IS NOT NULL
 GROUP BY release_year
 ORDER BY total_votes DESC
 LIMIT 10;
@@ -65,7 +64,7 @@ SELECT name, COUNT(*) AS num_movies
 FROM credits
 JOIN titles ON credits.id = titles.id
 WHERE role = 'DIRECTOR' 
-  AND type = 'MOVIE'
+AND type = 'MOVIE'
 GROUP BY name
 ORDER BY num_movies DESC
 LIMIT 10;
@@ -75,11 +74,13 @@ SELECT name, AVG(imdb_score) AS avg_rating
 FROM credits
 JOIN titles ON credits.id = titles.id
 WHERE role = 'ACTOR' 
-  AND type = 'MOVIE'
+AND type = 'MOVIE'
+AND imdb_score IS NOT NULL
 GROUP BY name
-HAVING COUNT(*) > 1  -- Asegurarse de que el actor ha estado en más de una película
+HAVING COUNT(*) > 1
 ORDER BY avg_rating DESC
 LIMIT 10;
+
 
 apartat 2
 
