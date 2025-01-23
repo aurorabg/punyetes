@@ -6,44 +6,42 @@ CREATE DATABASE IF NOT EXISTS netflix;
 
 USE netflix;
 
-CREATE TABLE IF NOT EXISTS raw_titles (
-    id STRING,
-    title STRING,
-    type STRING,
-    release_year INT,
-    age_certification STRING,
-    runtime INT,
-    genres ARRAY<STRING>,
-    production_countries ARRAY<STRING>,
-    seasons INT,
-    imdb_id STRING,
-    imdb_score FLOAT,
-    imdb_votes INT
-)
-ROW FORMAT DELIMITED
+CREATE TABLE titles(
+ index INT,
+ id STRING,
+ title STRING,
+ type STRING,
+ release_year INT,
+ age_certification STRING,
+ runtime INT,
+ genres STRING,
+ production_countries STRING,
+ seasons FLOAT,
+ imdb_id STRING,
+ imdb_score FLOAT,
+ imdb_votes FLOAT)
+ROW FORMAT DELIMITED 
 FIELDS TERMINATED BY '\t'
-STORED AS TEXTFILE
 TBLPROPERTIES ("skip.header.line.count"="1");
 
-CREATE TABLE IF NOT EXISTS raw_credits (
-    person_id INT,
-    id STRING,
-    name STRING,
-    character STRING,
-    `role` STRING
-)
+CREATE TABLE credits(
+ index INT,
+ person_id INT,
+ id STRING,
+ name STRING,
+ character STRING,
+ role STRING)
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY '\t'
-STORED AS TEXTFILE
 TBLPROPERTIES ("skip.header.line.count"="1");
 
 hdfs dfs -put /home/cloudera/netflix/raw_titles.csv /user/hive/warehouse/netflix.db/raw_titles/
 
 hdfs dfs -put /home/cloudera/netflix/raw_credits.csv /user/hive/warehouse/netflix.db/raw_credits/
 
-LOAD DATA INPATH '/user/hive/warehouse/netflix.db/raw_titles/raw_titles.csv' INTO TABLE raw_titles;
+LOAD DATA INPATH '/user/hive/warehouse/netflix.db/raw_titles/raw_titles.csv' INTO TABLE titles;
 
-LOAD DATA INPATH '/user/hive/warehouse/netflix.db/raw_credits/raw_credits.csv' INTO TABLE raw_credits;
+LOAD DATA INPATH '/user/hive/warehouse/netflix.db/raw_credits/raw_credits.csv' INTO TABLE credits;
 
 1
 SELECT title, rating, seasons
