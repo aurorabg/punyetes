@@ -48,6 +48,7 @@ SELECT title, seasons, imdb_score
 FROM titles
 WHERE type = 'SHOW' 
   AND seasons > 1
+  AND imdb_score IS NOT NULL  -- Aseguramos que haya una valoración
 ORDER BY imdb_score DESC
 LIMIT 10;
 
