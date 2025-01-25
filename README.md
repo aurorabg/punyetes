@@ -188,6 +188,10 @@ Apartat 3
 
 https://raw.githubusercontent.com/tnavarrete-iedib/bigdata-24-25/refs/heads/main/centres_educatius.json 
 
+hdfs dfs -mkdir -p /user/cloudera/impala/centres
+hdfs dfs -put centres_educatius.json /user/cloudera/impala/centres/
+
+
 hdfs dfs -put centres_educatius.json /user/hive/warehouse/centres_educatius/
 
 CREATE EXTERNAL TABLE centres_educatius (
