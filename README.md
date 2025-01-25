@@ -205,6 +205,81 @@ CREATE EXTERNAL TABLE centres_educatius (
 )
 LOCATION '/user/hive/warehouse/centres_educatius';
 
+CREATE TABLE centres_educatius (
+    adreca STRING,
+    cif STRING,
+    codiIlla STRING,
+    codiMunicipi STRING,
+    codiOficial STRING,
+    cp STRING,
+    esPublic BOOLEAN,
+    latitud DOUBLE,
+    longitud DOUBLE,
+    mail STRING,
+    nom STRING,
+    nomEtapa ARRAY<STRING>,
+    nomIlla STRING,
+    nomMunicipi STRING,
+    telf1 STRING,
+    tipusCentreNomCa STRING
+)
+STORED AS PARQUET
+TBLPROPERTIES ('parquet.compression'='SNAPPY');
+
+CREATE EXTERNAL TABLE centres_json (
+    data STRUCT<
+        adreca: STRING,
+        cif: STRING,
+        codiIlla: STRING,
+        codiMunicipi: STRING,
+        codiOficial: STRING,
+        cp: STRING,
+        esPublic: BOOLEAN,
+        latitud: DOUBLE,
+        longitud: DOUBLE,
+        mail: STRING,
+        nom: STRING,
+        nomEtapa: STRING,
+        nomIlla: STRING,
+        nomMunicipi: STRING,
+        telf1: STRING,
+        tipusCentreNomCa: STRING
+    >
+)
+STORED AS TEXTFILE
+LOCATION '/ruta/al/json/'
+TBLPROPERTIES (
+    'serialization.format' = '1',
+    'field.delim' = ',',
+    'ignore.malformed.json' = 'true',
+    'json.input.format' = 'org.apache.hadoop.hive.serde2.JsonSerDe'
+);
+
+INSERT INTO centres_educatius
+SELECT
+    data.adreca,
+    data.cif,
+    data.codiIlla,
+    data.codiMunicipi,
+    data.codiOficial,
+    data.cp,
+    data.esPublic,
+    data.latitud,
+    data.longitud,
+    data.mail,
+    data.nom,
+    split(data.nomEtapa, ', ') AS nomEtapa,
+    data.nomIlla,
+    data.nomMunicipi,
+    data.telf1,
+    data.tipusCentreNomCa
+FROM centres_json;
+
+INVALIDATE METADATA centres_educatius;
+
+SELECT nom, nomEtapa FROM centres_educatius WHERE esPublic = TRUE;
+
+
 a
 SELECT COUNT(*) AS nombre_centres_publics_eivissa
 FROM centres_educatius
