@@ -5,6 +5,8 @@ hbase shell
 sudo service hbase-master start
 sudo service hbase-regionserver start
 
+echo "stat" | nc localhost 2181
+
 
 create 'vehicles', 'info_general', 'conservacio', 'propietari', 'ubicacio'
 
