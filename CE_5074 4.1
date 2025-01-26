@@ -20,6 +20,11 @@ stop-hbase.sh
 hdfs dfs -rm -r /hbase
 start-hbase.sh
 
+<property>
+  <name>hbase.wal.provider</name>
+  <value>filesystem</value>
+</property>
+
 
 
 
