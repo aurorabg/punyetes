@@ -120,11 +120,5 @@ GROUP BY ubicacio.illa;
 
 apartat 3
 
-select
-SPLIT(
-        REGEXP_REPLACE(
-            REGEXP_REPLACE(get_json_object(centre, '$.data.nomEtapa'), 
-            '"', ''
-        ),
-        ','
-    ) AS Serveis_Addicionals
+SPLIT(REGEXP_REPLACE(REGEXP_REPLACE(get_json_object(centre, '$.data.nomEtapa'), '\\"', ''), ','), ',') AS nometapa
+
