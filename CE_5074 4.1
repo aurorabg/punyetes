@@ -90,6 +90,9 @@ scan 'vehicles', { FILTER => "SingleColumnValueFilter('conservacio', 'estat', =,
 
 scan 'vehicles', { FILTER => "SingleColumnValueFilter('ubicacio', 'illa', =, 'binary:Mallorca')", COLUMNS => ['propietari'] }
 
+scan 'vehicles', {COLUMNS => ['info_general'], FILTER => "(SingleColumnValueFilter('info_general', 'any', >=, 'binary:2017') AND SingleColumnValueFilter('info_general', 'km', <, 'binary:50000'))"}
+
+
 put 'vehicles', '2', 'propietari:telefon', '656123321'
 
 deleteall 'vehicles', '5'
