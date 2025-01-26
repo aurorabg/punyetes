@@ -137,79 +137,33 @@ WITH SERDEPROPERTIES (
 TBLPROPERTIES ('hbase.table.name' = 'vehicles');
 
 
-SELECT info_general.*
-FROM vehicles_hbase
-WHERE ubicacio.ciutat = 'Palma';
+-- Consulta en HiveQL: Datos de información general de vehículos en Palma
+SELECT 
+    info_general_marca, 
+    info_general_model, 
+    info_general_matricula, 
+    info_general_preu, 
+    info_general_any, 
+    info_general_km 
+FROM hbase_vehicles 
+WHERE ubicacio_ciutat = 'Palma';
 
-SELECT *
-FROM vehicles_hbase
-ORDER BY info_general.preu DESC
+-- Consulta en Impala: Retornar los 3 vehículos más caros
+SELECT * 
+FROM hbase_vehicles 
+ORDER BY info_general_preu DESC 
 LIMIT 3;
 
-SELECT conservacio.estat, AVG(conservacio.km) AS mitjana_km
-FROM vehicles_hbase
-GROUP BY conservacio.estat;
-
-SELECT ubicacio.illa, COUNT(*) AS num_vehicles
-FROM vehicles_hbase
-GROUP BY ubicacio.illa;
-
-
-
-apartat 3
-
-INSERT INTO centres
+-- Consulta en HiveQL: Agrupar vehículos por estado y mostrar la media de km
 SELECT 
-    named_struct(
-        'adreca', get_json_object(centre, '$.data.adreca'),
-        'cif', get_json_object(centre, '$.data.cif'),
-        'codiilla', get_json_object(centre, '$.data.codiIlla'),
-        'codimunicipi', get_json_object(centre, '$.data.codiMunicipi'),
-        'codioficial', get_json_object(centre, '$.data.codiOficial'),
-        'cp', get_json_object(centre, '$.data.cp'),
-        'espublic', cast(get_json_object(centre, '$.data.esPublic') AS BOOLEAN),
-        'latitud', cast(get_json_object(centre, '$.data.latitud') AS DOUBLE),
-        'longitud', cast(get_json_object(centre, '$.data.longitud') AS DOUBLE),
-        'mail', get_json_object(centre, '$.data.mail'),
-        'nom', get_json_object(centre, '$.data.nom'),
-        'nometapa', SPLIT(REGEXP_REPLACE(REGEXP_REPLACE(get_json_object(centre, '$.data.nomEtapa'), '\\\\\"', ''), ','), ','),
-        'nomilla', get_json_object(centre, '$.data.nomIlla'),
-        'nommunicipi', get_json_object(centre, '$.data.nomMunicipi'),
-        'telf1', get_json_object(centre, '$.data.telf1'),
-        'tipuscentrenomca', get_json_object(centre, '$.data.tipusCentreNomCa')
-    ) AS centre
-FROM centres_raw;
+    conservacio_estat, 
+    AVG(info_general_km) AS promedio_km 
+FROM hbase_vehicles 
+GROUP BY conservacio_estat;
 
-
-INSERT INTO centres
+-- Consulta en Impala: Agrupar vehículos por isla y mostrar el número de vehículos por isla
 SELECT 
-    named_struct(
-        'adreca', get_json_object(centre, '$.data.adreca'),
-        'cif', get_json_object(centre, '$.data.cif'),
-        'codiilla', get_json_object(centre, '$.data.codiIlla'),
-        'codimunicipi', get_json_object(centre, '$.data.codiMunicipi'),
-        'codioficial', get_json_object(centre, '$.data.codiOficial'),
-        'cp', get_json_object(centre, '$.data.cp'),
-        'espublic', cast(get_json_object(centre, '$.data.esPublic') AS BOOLEAN),
-        'latitud', cast(get_json_object(centre, '$.data.latitud') AS DOUBLE),
-        'longitud', cast(get_json_object(centre, '$.data.longitud') AS DOUBLE),
-        'mail', get_json_object(centre, '$.data.mail'),
-        'nom', get_json_object(centre, '$.data.nom'),
-        'nometapa', CAST(
-                        SPLIT(
-                            REGEXP_REPLACE(
-                                REGEXP_REPLACE(get_json_object(centre, '$.data.nomEtapa'), '\\[|\\]', ''), 
-                                '\"', ''
-                            ), 
-                            ','
-                        ) AS ARRAY<STRING>
-                    ),
-        'nomilla', get_json_object(centre, '$.data.nomIlla'),
-        'nommunicipi', get_json_object(centre, '$.data.nomMunicipi'),
-        'telf1', get_json_object(centre, '$.data.telf1'),
-        'tipuscentrenomca', get_json_object(centre, '$.data.tipusCentreNomCa')
-    ) AS centre
-FROM centres_raw;
-
-
-
+    ubicacio_illa, 
+    COUNT(*) AS total_vehicles 
+FROM hbase_vehicles 
+GROUP BY ubicacio_illa;
