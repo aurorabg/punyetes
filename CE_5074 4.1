@@ -120,5 +120,26 @@ GROUP BY ubicacio.illa;
 
 apartat 3
 
-SPLIT(REGEXP_REPLACE(REGEXP_REPLACE(get_json_object(centre, '$.data.nomEtapa'), '\\"', ''), ','), ',') AS nometapa
+INSERT INTO centres
+SELECT 
+    named_struct(
+        'adreca', get_json_object(centre, '$.data.adreca'),
+        'cif', get_json_object(centre, '$.data.cif'),
+        'codiilla', get_json_object(centre, '$.data.codiIlla'),
+        'codimunicipi', get_json_object(centre, '$.data.codiMunicipi'),
+        'codioficial', get_json_object(centre, '$.data.codiOficial'),
+        'cp', get_json_object(centre, '$.data.cp'),
+        'espublic', cast(get_json_object(centre, '$.data.esPublic') AS BOOLEAN),
+        'latitud', cast(get_json_object(centre, '$.data.latitud') AS DOUBLE),
+        'longitud', cast(get_json_object(centre, '$.data.longitud') AS DOUBLE),
+        'mail', get_json_object(centre, '$.data.mail'),
+        'nom', get_json_object(centre, '$.data.nom'),
+        'nometapa', SPLIT(REGEXP_REPLACE(REGEXP_REPLACE(get_json_object(centre, '$.data.nomEtapa'), '\\\\\"', ''), ','), ','),
+        'nomilla', get_json_object(centre, '$.data.nomIlla'),
+        'nommunicipi', get_json_object(centre, '$.data.nomMunicipi'),
+        'telf1', get_json_object(centre, '$.data.telf1'),
+        'tipuscentrenomca', get_json_object(centre, '$.data.tipusCentreNomCa')
+    ) AS centre
+FROM centres_raw;
+
 
