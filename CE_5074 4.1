@@ -110,6 +110,33 @@ WITH SERDEPROPERTIES (
 )
 TBLPROPERTIES ("hbase.table.name" = "vehicles");
 
+
+CREATE EXTERNAL TABLE hbase_vehicles (
+    key STRING,
+    info_general_marca STRING,
+    info_general_model STRING,
+    info_general_matricula STRING,
+    info_general_preu INT,
+    info_general_any INT,
+    info_general_km INT,
+    conservacio_estat STRING,
+    propietari_nif STRING,
+    propietari_nom STRING,
+    propietari_telefon STRING,
+    propietari_mail STRING,
+    ubicacio_ciutat STRING,
+    ubicacio_illa STRING,
+    ubicacio_longitud DECIMAL(10,6),
+    ubicacio_latitud DECIMAL(10,6)
+)
+STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler' 
+WITH SERDEPROPERTIES (
+    'hbase.columns.mapping' = 
+    ':key,info_general:marca,info_general:model,info_general:matricula,info_general:preu,info_general:any,info_general:km,conservacio:estat,propietari:nif,propietari:nom,propietari:telefon,propietari:mail,ubicacio:ciutat,ubicacio:illa,ubicacio:longitud,ubicacio:latitud'
+)
+TBLPROPERTIES ('hbase.table.name' = 'vehicles');
+
+
 SELECT info_general.*
 FROM vehicles_hbase
 WHERE ubicacio.ciutat = 'Palma';
