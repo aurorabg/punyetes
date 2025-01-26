@@ -10,6 +10,17 @@ echo "stat" | nc localhost 2181
 tail -f /var/log/hbase/hbase-hbase-master-<hostname>.log
 tail -f /var/log/hbase/hbase-hbase-regionserver-<hostname>.log
 
+hdfs dfs -rm /hbase/data/hbase/meta/tabledesc/.tabledinfo.0000000001
+hdfs dfs -rm /hbase/data/hbase/meta/1588230740/regioninfo
+hdfs dfs -rm /hbase/hbase.id
+hdfs dfs -rm /hbase/hbase.version
+hdfs fsck / -replicate
+
+stop-hbase.sh
+hdfs dfs -rm -r /hbase
+start-hbase.sh
+
+
 
 
 create 'vehicles', 'info_general', 'conservacio', 'propietari', 'ubicacio'
