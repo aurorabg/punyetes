@@ -7,6 +7,10 @@ sudo service hbase-regionserver start
 
 echo "stat" | nc localhost 2181
 
+tail -f /var/log/hbase/hbase-hbase-master-<hostname>.log
+tail -f /var/log/hbase/hbase-hbase-regionserver-<hostname>.log
+
+
 
 create 'vehicles', 'info_general', 'conservacio', 'propietari', 'ubicacio'
 
