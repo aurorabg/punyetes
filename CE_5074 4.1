@@ -1,0 +1,92 @@
+create 'vehicles', 'info_general', 'conservacio', 'propietari', 'ubicacio'
+
+put 'vehicles', '1', 'info_general:marca', 'Toyota'
+put 'vehicles', '1', 'info_general:model', 'Corolla'
+put 'vehicles', '1', 'info_general:matricula', '1234ABC'
+put 'vehicles', '1', 'info_general:preu', '12000'
+put 'vehicles', '1', 'info_general:any', '2015'
+put 'vehicles', '1', 'conservacio:km', '120000'
+put 'vehicles', '1', 'conservacio:estat', 'bo'
+put 'vehicles', '1', 'propietari:nif', '12345678A'
+put 'vehicles', '1', 'propietari:nom', 'Joan Martínez'
+put 'vehicles', '1', 'propietari:telefon', '623456789'
+put 'vehicles', '1', 'propietari:mail', 'joan.martinez@email.com'
+put 'vehicles', '1', 'ubicacio:ciutat', 'Palma'
+put 'vehicles', '1', 'ubicacio:illa', 'Mallorca'
+put 'vehicles', '1', 'ubicacio:longitud', '2.650160'
+put 'vehicles', '1', 'ubicacio:latitud', '39.569600'
+
+put 'vehicles', '2', 'info_general:marca', 'Ford'
+put 'vehicles', '2', 'info_general:model', 'Focus'
+put 'vehicles', '2', 'info_general:matricula', '5678DEF'
+put 'vehicles', '2', 'info_general:preu', '15500'
+put 'vehicles', '2', 'info_general:any', '2018'
+put 'vehicles', '2', 'conservacio:km', '55000'
+put 'vehicles', '2', 'conservacio:estat', 'molt bo'
+put 'vehicles', '2', 'propietari:nif', '87654321B'
+put 'vehicles', '2', 'propietari:nom', 'Ana García'
+put 'vehicles', '2', 'propietari:mail', 'ana.garcia@email.com'
+put 'vehicles', '2', 'ubicacio:ciutat', 'Palma'
+put 'vehicles', '2', 'ubicacio:illa', 'Mallorca'
+
+put 'vehicles', '3', 'info_general:marca', 'Honda'
+put 'vehicles', '3', 'info_general:model', 'Civic'
+put 'vehicles', '3', 'info_general:matricula', '9012GHI'
+put 'vehicles', '3', 'info_general:preu', '18000'
+put 'vehicles', '3', 'info_general:any', '2020'
+put 'vehicles', '3', 'conservacio:km', '20000'
+put 'vehicles', '3', 'conservacio:estat', 'bo'
+put 'vehicles', '3', 'propietari:nif', '11223344C'
+put 'vehicles', '3', 'propietari:nom', 'David López'
+put 'vehicles', '3', 'propietari:telefon', '655123456'
+put 'vehicles', '3', 'ubicacio:ciutat', 'Eivissa'
+put 'vehicles', '3', 'ubicacio:illa', 'Eivissa'
+put 'vehicles', '3', 'ubicacio:longitud', '1.452850'
+put 'vehicles', '3', 'ubicacio:latitud', '38.916280'
+
+key,info_general:marca,info_general:model,info_general:matricula,info_general:preu,info_general:any,conservacio:km,conservacio:estat,propietari:nif,propietari:nom,propietari:telefon,propietari:mail,ubicacio:ciutat,ubicacio:illa,ubicacio:longitud,ubicacio:latitud
+4,Mercedes-Benz,A-Class,3456JKL,30000,2019,40000,bo,22334455D,Maria Sánchez,672345678,,Manacor,Mallorca,3.703790,40.416780
+5,BMW,X5,7890JKL,25000,2017,70000,bo,33445566E,Jordi Pérez,,jordi.perez@email.com,Ciutadella,Menorca,0.376288,39.469907
+6,Audi,A4,1122XYZ,20000,2016,80000,molt bo,44556677F,Laura Martín,687654321,laura.martin@email.com,Maó,Menorca,,
+
+get 'vehicles', '4'
+
+scan 'vehicles', { COLUMNS => ['info_general'] }
+
+scan 'vehicles', { FILTER => "SingleColumnValueFilter('conservacio', 'estat', =, 'binary:bo')" }
+
+scan 'vehicles', { FILTER => "SingleColumnValueFilter('ubicacio', 'illa', =, 'binary:Mallorca')", COLUMNS => ['propietari'] }
+
+put 'vehicles', '2', 'propietari:telefon', '656123321'
+
+deleteall 'vehicles', '5'
+
+CREATE EXTERNAL TABLE vehicles_hbase (
+  rowkey STRING,
+  info_general STRUCT<marca:STRING,model:STRING,matricula:STRING,preu:INT,any:INT>,
+  conservacio STRUCT<km:INT,estat:STRING>,
+  propietari STRUCT<nif:STRING,nom:STRING,telefon:STRING,mail:STRING>,
+  ubicacio STRUCT<ciutat:STRING,illa:STRING,longitud:DOUBLE,latitud:DOUBLE>
+)
+STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+WITH SERDEPROPERTIES (
+  'hbase.columns.mapping' = ':key,info_general:marca,info_general:model,info_general:matricula,info_general:preu,info_general:any,conservacio:km,conservacio:estat,propietari:nif,propietari:nom,propietari:telefon,propietari:mail,ubicacio:ciutat,ubicacio:illa,ubicacio:longitud,ubicacio:latitud'
+)
+TBLPROPERTIES ("hbase.table.name" = "vehicles");
+
+SELECT info_general.*
+FROM vehicles_hbase
+WHERE ubicacio.ciutat = 'Palma';
+
+SELECT *
+FROM vehicles_hbase
+ORDER BY info_general.preu DESC
+LIMIT 3;
+
+SELECT conservacio.estat, AVG(conservacio.km) AS mitjana_km
+FROM vehicles_hbase
+GROUP BY conservacio.estat;
+
+SELECT ubicacio.illa, COUNT(*) AS num_vehicles
+FROM vehicles_hbase
+GROUP BY ubicacio.illa;
