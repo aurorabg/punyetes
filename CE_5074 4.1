@@ -79,7 +79,11 @@ key,info_general:marca,info_general:model,info_general:matricula,info_general:pr
 5,BMW,X5,7890JKL,25000,2017,70000,bo,33445566E,Jordi Pérez,,jordi.perez@email.com,Ciutadella,Menorca,0.376288,39.469907
 6,Audi,A4,1122XYZ,20000,2016,80000,molt bo,44556677F,Laura Martín,687654321,laura.martin@email.com,Maó,Menorca,,
 
-hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.separator=";" -Dimporttsv.columns="HBASE_ROW_KEY,resum:nom,resum:tipus,propietari:nif,propietari:nom,propietari:mail,propietari:telefon,localitzacio:longitud,localitzacio:latitud,localitzacio:adreca,localitzacio:zona,localitzacio:pais,caracteristiques:maxocupants,caracteristiques:nhabitacions,caracteristiques:nbanys,caracteristiques:superficie" allotjaments /hbase/dades.csv  
+hbase org.apache.hadoop.hbase.mapreduce.ImportTsv \
+-Dimporttsv.separator=";" \
+-Dimporttsv.columns="HBASE_ROW_KEY,info_general:marca,info_general:model,info_general:matricula,info_general:preu,info_general:any,info_general:km,conservacio:estat,propietari:nif,propietari:nom,propietari:telefon,propietari:mail,ubicacio:ciutat,ubicacio:illa,ubicacio:longitud,ubicacio:latitud" \
+vehicles /hbase/act.csv
+
 
 get 'vehicles', '4'
 
