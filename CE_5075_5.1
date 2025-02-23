@@ -25,3 +25,65 @@ conteo_final = FOREACH conteo_palabras GENERATE group AS palabra, COUNT(palabras
 STORE conteo_final INTO 'resultado';
 
 grunt> exec mi_script.pig
+
+Apartat 3
+$ yum update
+$ yum install -y httpd
+$ systemctl start httpd
+$ systemctl enable httpd
+$ systemctl status httpd
+
+$ yum update 
+$ yum install ganglia rrdtool ganglia-gmetad ganglia-gmond ganglia-web
+
+$ htpasswd -c /etc/httpd/auth.basic adminganglia
+$ setsebool -P httpd_can_network_connect 1
+
+
+$ systemctl stop firewalld 
+$ systemctl disable firewalld
+
+/etc/httpd/conf.d/ganglia.conf:
+# Ganglia monitoring system php web frontend
+Alias /ganglia /usr/share/ganglia
+<Location /ganglia>
+        AuthType basic
+        AuthName "Ganglia web UI"
+        AuthBasicProvider file
+        AuthUserFile "/etc/httpd/auth.basic"
+        Require user adminganglia
+</Location>
+
+/etc/ganglia/gmond.conf:
+https://raw.githubusercontent.com/tnavarrete-iedib/bigdata-23-24/main/ganglia/master/gmond.conf
+
+/etc/ganglia/gmetad.conf:
+https://raw.githubusercontent.com/tnavarrete-iedib/bigdata-23-24/main/ganglia/master/gmetad.conf
+
+ /home/hadoop/hadoop/etc/hadoop/hadoop-metrics2.properties:
+ https://raw.githubusercontent.com/tnavarrete-iedib/bigdata-23-24/main/ganglia/master/hadoop-metrics2.properties
+
+
+ Nodes esclaus:
+$ yum update
+$ yum install ganglia-gmond
+$ systemctl stop firewalld 
+$ systemctl disable firewalld
+
+/etc/ganglia/gmond.conf:
+https://raw.githubusercontent.com/tnavarrete-iedib/bigdata-23-24/main/ganglia/slave/gmond.conf
+
+/home/hadoop/hadoop/etc/hadoop/hadoop-metrics2.properties:
+https://raw.githubusercontent.com/tnavarrete-iedib/bigdata-23-24/main/ganglia/slave/hadoop-metrics2.properties
+
+$ systemctl restart gmond
+$ systemctl enable gmond
+
+Node Mestre:
+$ stop-all.sh
+$ start-all.sh
+
+$ systemctl restart httpd gmetad gmond
+$ systemctl enable httpd gmetad gmond
+
+ http://hadoopmaster/ganglia
