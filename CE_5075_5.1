@@ -23,3 +23,5 @@ conteo_final = FOREACH conteo_palabras GENERATE group AS palabra, COUNT(palabras
 
 -- Guardar el resultado en un archivo de salida
 STORE conteo_final INTO 'resultado';
+
+grunt> exec mi_script.pig
