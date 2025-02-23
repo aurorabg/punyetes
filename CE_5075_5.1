@@ -9,3 +9,17 @@ http://quickstart.cloudera:50070
 http://quickstart.cloudera:50070/dfshealth.html#tab-datanode
 http://quickstart.cloudera:8088/cluster
 http://quickstart.cloudera:8042/node
+
+pig script:
+-- Cargar el archivo de texto
+datos = LOAD 'nombre_archivo.txt' AS (linea:chararray);
+
+-- Dividir cada línea en palabras
+palabras = FOREACH datos GENERATE FLATTEN(TOKENIZE(linea)) AS palabra;
+
+-- Contar la cantidad de veces que aparece cada palabra
+conteo_palabras = GROUP palabras BY palabra;
+conteo_final = FOREACH conteo_palabras GENERATE group AS palabra, COUNT(palabras) AS conteo;
+
+-- Guardar el resultado en un archivo de salida
+STORE conteo_final INTO 'resultado';
